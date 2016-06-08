@@ -1,21 +1,25 @@
-CREATE PROCEDURE `INSERTARDOCENTE` (DNI_DOC VARCHAR(8),
-NOMBRE VARCHAR(35),
-APELLLPATERNO VARCHAR(35),
-APELLMATERNO VARCHAR(35),
-CELULAR VARCHAR(9),
-CORREO VARCHAR(45),
-FOTO varbinary
-)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTARDOCENTE`(IN DNI 		   VARCHAR(8), 
+															  IN NOMBRE 	   VARCHAR(35),
+                                                              IN APELLLPATERNO VARCHAR(35), 
+                                                              IN APELLMATERNO  VARCHAR(35), 
+                                                              IN CELULAR 	   VARCHAR(9), 
+                                                              IN CORREO 	   VARCHAR(45), 
+                                                              IN FOTO 		   VARBINARY(65535)
+                                                              )
 BEGIN
-
-DECLARE RESPUESTA VARCHAR(50);
+DECLARE RESPUESTA VARCHAR(100);
 DECLARE IDCARGO INT;
+    
+    SET RESPUESTA = "";
+    
+    SELECT COUNT(*) 
+	  INTO V_DNI 
+	 FROM DOCENTE 
+	WHERE DNI_DOC = DNI;
 
-IF EXISTS (SELECT DNI_DOC FROM  DOCENTE where DNI_DOC = DNI_DOC)
-	BEGIN 
-	SET RESPUESTA= 'El Dni ya existe';
-	select RESPUESTA as respuesta ;
-	END;
-ELSE IF EXISTS (SELECT * FROM DOCENTE WHERE DOCENTE.NOMBRE= NOMBRE AND DOCENTE.APELLLPATERNO = APELLLPATERNO AND DOCENTE.APELLMATERNO=APELLMATERNO)
 
-END
+	IF(V_DNI > 0)THEN
+		SET RESPUESTA= 'El Dni ya existe';
+	END IF;
+
+END;
